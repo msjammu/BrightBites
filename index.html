@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BrightBites • Bite-Sized Learning Adventures</title>
+  <meta name="description" content="Curated articles, videos, and skill snacks for bite-sized learning adventures in AI, coding, and technology." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d12; /* deep slate */
+      --panel: #111520; /* card bg */
+      --panel-2: #0e121a; /* header/footer */
+      --text: #e6eaf2; /* primary text */
+      --muted: #9aa3b2;
+      --brand: #7c9cff; /* soft indigo */
+      --accent: #55d6be; /* mint */
+      --ring: rgba(124, 156, 255, 0.35);
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35), 0 2px 6px rgba(124,156,255,0.15);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    a { color: var(--brand); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header {
+      background: radial-gradient(1200px 400px at 20% -10%, rgba(124,156,255,0.25), transparent),
+                  radial-gradient(800px 300px at 90% 0%, rgba(85,214,190,0.22), transparent), var(--panel-2);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 28px 18px; }
+    .title { font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; letter-spacing: -0.02em; margin: 8px 0 6px; }
+    .subtitle { color: var(--muted); margin: 0 0 18px; }
+    .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; margin-top: 18px; }
+    .search { display: flex; gap: 10px; background: var(--panel); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 10px 12px; box-shadow: var(--shadow); }
+    .search input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 15px; }
+    .tabs { display: inline-flex; background: var(--panel); border: 1px solid rgba(255,255,255,0.07); border-radius: 999px; padding: 4px; box-shadow: var(--shadow); }
+    .tab { cursor: pointer; border: none; background: transparent; color: var(--muted); padding: 8px 14px; border-radius: 999px; font-weight: 600; }
+    .tab.active { background: #1a2233; color: var(--text); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06); }
+
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; margin-top: 22px; }
+    .card { grid-column: span 12; background: var(--panel); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 14px; box-shadow: var(--shadow); }
+    .card > div:first-child { display: flex; gap: 14px; align-items: flex-start; }
+    .card-video { margin-top: 8px; }
+    .thumb { width: 180px; height: 110px; border-radius: 12px; background: #0a0d14; object-fit: cover; border: 1px solid rgba(255,255,255,0.06); flex: 0 0 auto; }
+    .content { flex: 1; min-width: 0; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; background: #101827; color: #cbd5e1; border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; padding: 6px 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; }
+    .title-sm { font-size: 18px; margin: 8px 0 6px; line-height: 1.35; }
+    .meta { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.1); background: linear-gradient(180deg, #1a2233, #121826); color: var(--text); padding: 8px 12px; border-radius: 12px; cursor: pointer; font-weight: 600; }
+    .btn:hover { box-shadow: 0 0 0 3px var(--ring); }
+
+    .embed { display: none; grid-column: span 12; background: var(--panel); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); overflow: hidden; position: relative; }
+    .embed iframe { width: 100%; aspect-ratio: 16/9; border: 0; }
+    .embed-close { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 16px; z-index: 10; }
+    .embed-close:hover { background: rgba(0,0,0,0.9); }
+
+    .tag-filters { margin-top: 16px; }
+    .tag-filters h4 { margin: 0 0 8px; font-size: 14px; color: var(--muted); font-weight: 600; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag-chip { cursor: pointer; background: var(--panel); border: 1px solid rgba(255,255,255,0.08); color: var(--muted); padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 500; transition: all 0.2s; }
+    .tag-chip:hover { background: #1a2233; color: var(--text); }
+    .tag-chip.active { background: var(--brand); color: white; border-color: var(--brand); }
+    .clear-tags { cursor: pointer; background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--muted); padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 500; }
+    .clear-tags:hover { background: var(--panel); }
+    
+    .card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+    .card-tag { background: rgba(124,156,255,0.1); color: var(--brand); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; cursor: pointer; }
+    .card-tag:hover { background: rgba(124,156,255,0.2); }
+
+    .todo-section { display: none; }
+    .todo-section.active { display: block; }
+    .add-todo { margin: 20px 0; }
+    .add-todo input { flex: 1; background: var(--panel); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 12px 16px; color: var(--text); font-size: 15px; margin-right: 10px; }
+    .add-todo button { background: linear-gradient(180deg, var(--brand), #5a7dd8); color: white; border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; }
+    .add-todo button:hover { box-shadow: 0 0 0 3px var(--ring); }
+    
+    .todo-list { display: grid; gap: 12px; }
+    .todo-item { background: var(--panel); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius); padding: 16px; display: flex; align-items: flex-start; gap: 12px; box-shadow: var(--shadow); }
+    .todo-checkbox { width: 20px; height: 20px; border: 2px solid var(--muted); border-radius: 6px; cursor: pointer; flex: 0 0 auto; margin-top: 2px; }
+    .todo-checkbox.checked { background: var(--accent); border-color: var(--accent); }
+    .todo-checkbox.checked::after { content: '✓'; color: white; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; height: 100%; }
+    .todo-icon { font-size: 24px; flex: 0 0 auto; margin-top: -2px; }
+    .todo-content { flex: 1; }
+    .todo-title { font-size: 16px; font-weight: 600; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+    .todo-title.completed { text-decoration: line-through; color: var(--muted); }
+
+    .todo-actions { display: flex; gap: 6px; margin-top: 8px; }
+    .todo-btn { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: var(--muted); padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 11px; }
+    .todo-btn:hover { background: var(--panel-2); color: var(--text); }
+    .delete-btn:hover { color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+
+    footer { text-align: center; margin-top: 40px; padding: 24px 18px; color: var(--muted); border-top: 1px solid rgba(255,255,255,0.06); background: var(--panel-2); }
+
+    @media (min-width: 640px) { .card { grid-column: span 6; } }
+    @media (min-width: 1024px) { .card { grid-column: span 4; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="badge">💡 BrightBites • Bite-Sized Learning Adventures</div>
+      <h1 class="title">Your Learning Adventure Starts Here</h1>
+      <p class="subtitle">Curated articles, videos, and skill snacks for bite-sized learning in AI, coding, and technology.</p>
+      <div class="toolbar">
+        <div class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 15.5L21 21" stroke="#7c9cff" stroke-width="2" stroke-linecap="round"/><circle cx="10.5" cy="10.5" r="6.5" stroke="#7c9cff" stroke-width="2"/></svg>
+          <input id="search" placeholder="Search topics, authors, channels…" />
+        </div>
+        <div class="tabs" role="tablist" aria-label="Filter resources">
+          <button class="tab active" data-type="all" role="tab" aria-selected="true">All</button>
+          <button class="tab" data-type="article" role="tab" aria-selected="false">Articles</button>
+          <button class="tab" data-type="video" role="tab" aria-selected="false">YouTube</button>
+          <button class="tab" data-type="todo" role="tab" aria-selected="false">🍎 Skill Snacks</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="resources-section" class="resources-section">
+      <div class="tag-filters">
+        <h4>Filter by tags:</h4>
+        <div class="tag-list">
+          <span class="clear-tags" onclick="clearTagFilter()">Clear all</span>
+          <div id="tag-chips"></div>
+        </div>
+      </div>
+      
+      <div id="grid" class="grid" aria-live="polite"></div>
+
+      <!-- Hidden video embed container (toggled when user clicks "Watch") -->
+      <div id="embed" class="embed"></div>
+    </div>
+
+    <div id="todo-section" class="todo-section">
+      <div style="margin-bottom: 16px;">
+        <p style="color: var(--muted); font-size: 14px; margin: 0 0 8px;">
+          🍎 Ready to snack on some new skills? Edit the <code>todos.js</code> file to add more tasty learning topics!
+        </p>
+      </div>
+      
+      <div id="todo-list" class="todo-list"></div>
+    </div>
+  </main>
+
+  <!-- Load the data from external files -->
+  <script src="data.js"></script>
+  <script src="todos.js"></script>
+  
+  <script>
+
+    const grid = document.getElementById('grid');
+    const searchInput = document.getElementById('search');
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const embed = document.getElementById('embed');
+    const tagChipsContainer = document.getElementById('tag-chips');
+    const resourcesSection = document.getElementById('resources-section');
+    const todoSection = document.getElementById('todo-section');
+    const todoList = document.getElementById('todo-list');
+
+    let state = { q: '', filter: 'all', selectedTags: [], currentView: 'resources' };
+    let todos = typeof LEARNING_TODOS !== 'undefined' ? LEARNING_TODOS : [];
+
+    function fmtDate(iso) {
+      try { return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); } catch(e) { return iso; }
+    }
+
+    function getAvailableTags() {
+      const q = state.q.trim().toLowerCase();
+      const filter = state.filter;
+      
+      // Get resources that match current search and content type filters (but not tag filters)
+      const visibleResources = RESOURCES
+        .filter(r => filter === 'all' || r.type === filter)
+        .filter(r => !q || [r.title, r.author, r.channel, (r.tags||[]).join(' ')].filter(Boolean).join(' ').toLowerCase().includes(q));
+      
+      // Collect tags from visible resources
+      const availableTags = new Set();
+      visibleResources.forEach(r => {
+        if (r.tags) {
+          r.tags.forEach(tag => availableTags.add(tag.toLowerCase()));
+        }
+      });
+      
+      return Array.from(availableTags).sort();
+    }
+
+    function renderTagChips() {
+      const availableTags = getAvailableTags();
+      
+      // Remove any selected tags that are no longer available
+      state.selectedTags = state.selectedTags.filter(tag => availableTags.includes(tag));
+      
+      tagChipsContainer.innerHTML = availableTags.map(tag => 
+        `<span class="tag-chip ${state.selectedTags.includes(tag) ? 'active' : ''}" 
+               onclick="toggleTag('${tag}')">${tag}</span>`
+      ).join('');
+    }
+
+    function toggleTag(tag) {
+      if (state.selectedTags.includes(tag)) {
+        state.selectedTags = state.selectedTags.filter(t => t !== tag);
+      } else {
+        state.selectedTags.push(tag);
+      }
+      renderTagChips();
+      render();
+    }
+
+    function clearTagFilter() {
+      state.selectedTags = [];
+      renderTagChips();
+      render();
+    }
+
+    // Todo Learning Functions
+
+    function toggleTodo(id) {
+      const todo = todos.find(t => t.id === id);
+      if (todo) {
+        todo.completed = !todo.completed;
+        renderTodos();
+      }
+    }
+
+    function renderTodos() {
+      const sortedTodos = todos.sort((a, b) => {
+        if (a.completed !== b.completed) return a.completed - b.completed;
+        return new Date(b.createdAt) - new Date(a.createdAt); // Sort by creation date, newest first
+      });
+
+      todoList.innerHTML = sortedTodos.map(todo => `
+        <div class="todo-item">
+          <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTodo(${todo.id})"></div>
+          <div class="todo-icon">${todo.icon || '📚'}</div>
+          <div class="todo-content">
+            <div class="todo-title ${todo.completed ? 'completed' : ''}">${todo.text}</div>
+            ${todo.whyLearn ? `<div style="margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.4;"><strong style="color: var(--accent);">Why Learn:</strong> ${todo.whyLearn}</div>` : ''}
+            ${todo.tags ? `<div style="margin-top: 8px;"><button class="btn" onclick="viewRelatedResources(['${todo.tags.join("','")}'])" style="font-size: 12px; padding: 6px 10px;">📚 View Resources</button></div>` : ''}
+            <div style="margin-top: 8px;">
+              <span style="color: var(--muted); font-size: 11px;">Added ${new Date(todo.createdAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      if (todos.length === 0) {
+        todoList.innerHTML = `<p class="subtitle">No skill snacks yet. Time to fill up your learning menu! 🍽️</p>`;
+      }
+    }
+
+    function itemHTML(r, i) {
+      const isVideo = r.type === 'video';
+      const left = `<img class="thumb" src="${r.image || (isVideo ? `https://i.ytimg.com/vi/${r.youtubeId}/hqdefault.jpg` : '')}" alt="${r.title}">`;
+      const byline = isVideo ? `YouTube • ${r.channel || 'Channel'}` : (r.author || '—');
+      const meta = `${byline} • ${r.date ? fmtDate(r.date) : ''}`;
+      const action = isVideo
+        ? `<button class="btn" onclick="playInline('${r.youtubeId}', this)" aria-controls="embed">▶ Watch</button>`
+        : `<a class="btn" href="${r.url}" target="_blank" rel="noopener">↗ Read</a>`;
+      
+      const cardTags = r.tags ? r.tags.map(tag => 
+        `<span class="card-tag" onclick="toggleTag('${tag.toLowerCase()}')">${tag}</span>`
+      ).join('') : '';
+
+      return `
+        <article class="card" data-index="${i}" data-type="${r.type}" data-tags="${(r.tags||[]).join(' ').toLowerCase()}" data-youtube-id="${isVideo ? r.youtubeId : ''}">
+          <div>
+            ${left}
+            <div class="content">
+              <span class="badge">${r.type === 'video' ? 'YouTube' : 'Article'}</span>
+              <h3 class="title-sm">${r.title}</h3>
+              <div class="meta">${meta}</div>
+              <div class="card-tags">${cardTags}</div>
+              <div class="actions">${action}</div>
+            </div>
+          </div>
+          <div class="card-video" style="display: none;"></div>
+        </article>
+      `;
+    }
+
+    function switchView(view, filterTags = []) {
+      state.currentView = view;
+      
+      if (view === 'todo') {
+        resourcesSection.style.display = 'none';
+        todoSection.style.display = 'block';
+        renderTodos();
+      } else {
+        resourcesSection.style.display = 'block';
+        todoSection.style.display = 'none';
+        
+        // Apply tag filters if provided
+        if (filterTags.length > 0) {
+          state.selectedTags = filterTags;
+          state.filter = 'all'; // Show all content types
+        }
+        
+        render();
+      }
+    }
+
+    function viewRelatedResources(todoTags) {
+      // Switch to resources view with filtered tags
+      switchView('resources', todoTags);
+      
+      // Update active tab
+      tabs.forEach(b => b.classList.remove('active'));
+      tabs.find(t => t.dataset.type === 'all').classList.add('active');
+      tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.type === 'all')));
+    }
+
+    function render() {
+      if (state.currentView === 'todo') {
+        switchView('todo');
+        return;
+      }
+
+      const q = state.q.trim().toLowerCase();
+      const filter = state.filter;
+      const selectedTags = state.selectedTags;
+      
+      // Update available tags based on current search/filter
+      renderTagChips();
+      
+      const rows = RESOURCES
+        .filter(r => filter === 'all' || r.type === filter)
+        .filter(r => !q || [r.title, r.author, r.channel, (r.tags||[]).join(' ')].filter(Boolean).join(' ').toLowerCase().includes(q))
+        .filter(r => {
+          if (selectedTags.length === 0) return true;
+          const resourceTags = (r.tags || []).map(tag => tag.toLowerCase());
+          return selectedTags.some(tag => resourceTags.includes(tag));
+        })
+        .sort((a,b) => new Date(b.date || '1970-01-01') - new Date(a.date || '1970-01-01'));
+      
+      grid.innerHTML = rows.map(itemHTML).join('');
+      if (!rows.length) grid.innerHTML = `<p class="subtitle">No results. Try different keywords or clear filters.</p>`;
+    }
+
+    function playInline(youtubeId, button) {
+      // Find the card and video container
+      const card = button.closest('.card');
+      const videoContainer = card.querySelector('.card-video');
+      
+      // Check if video is already playing
+      if (videoContainer.style.display === 'block') {
+        // Close the video
+        videoContainer.style.display = 'none';
+        videoContainer.innerHTML = '';
+        button.innerHTML = '▶ Watch';
+        return;
+      }
+      
+      // Close any other open videos
+      document.querySelectorAll('.card-video').forEach(container => {
+        container.style.display = 'none';
+        container.innerHTML = '';
+      });
+      document.querySelectorAll('.card .btn').forEach(btn => {
+        if (btn.innerHTML.includes('Close')) btn.innerHTML = '▶ Watch';
+      });
+      
+      // Open this video
+      videoContainer.innerHTML = `
+        <div style="position: relative; padding: 20px; background: #1a1a1a; border-radius: 8px; margin-top: 15px;">
+          <iframe 
+            width="100%" 
+            height="315"
+            src="https://www.youtube-nocookie.com/embed/${youtubeId}?modestbranding=1&rel=0&showinfo=0&disablekb=1&autoplay=1" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen
+            loading="lazy"
+            style="border-radius: 4px;">
+          </iframe>
+        </div>`;
+      videoContainer.style.display = 'block';
+      button.innerHTML = '⏹ Close';
+      
+      // Scroll the video into view smoothly
+      videoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function closeVideo() {
+      embed.style.display = 'none';
+      embed.innerHTML = '';
+    }
+
+    // interactions
+    searchInput.addEventListener('input', (e) => { state.q = e.target.value; render(); });
+    tabs.forEach(btn => btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active')); 
+      btn.classList.add('active');
+      
+      if (btn.dataset.type === 'todo') {
+        switchView('todo');
+      } else {
+        state.filter = btn.dataset.type;
+        switchView('resources');
+      }
+      
+      // Update aria-selected for accessibility
+      tabs.forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+    }));
+
+
+
+    // initial paint
+    renderTagChips();
+    render();
+    renderTodos();
+  </script>
+
+    <footer>
+    <p>Made with ❤️ on GitHub Pages</p>
+  </footer>
+
+</body>
+</html>
+
