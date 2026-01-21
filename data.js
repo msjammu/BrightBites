@@ -184,5 +184,14 @@ const RESOURCES = [
     date: '2024-03-28',
     image: 'https://i.ytimg.com/vi/R-z2Hv-7nxk/hqdefault.jpg',
     tags: ['csharp', 'async-await', 'dotnet', 'deep-dive', 'stephen-toub', 'advanced', 'internals']
-  }      
+  },
+  {
+    type: 'video',
+    title: 'Claude Code Clearly Explained (and how to use it)',
+    youtubeId: 'zxMjOqM7DFs',
+    channel: 'Greg Isenberg',
+    date: '2026-01-19',
+    image: 'https://i.ytimg.com/vi/zxMjOqM7DFs/hqdefault.jpg',
+    tags: ['claude', 'ai', 'coding', 'tutorial']
+  }
 ];
